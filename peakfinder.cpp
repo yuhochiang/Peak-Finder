@@ -2,10 +2,9 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <cstdlib>
+#include <ctime>
 using namespace std ;
 vector <int> peak ;
-
 
 void** newmatrix(int h, int w, int size)
 {
@@ -17,86 +16,39 @@ void** newmatrix(int h, int w, int size)
         p[i] = ((int*)(p + h)) + i*w*size ;
     return p ;
 }
- int findpeak(int** data, int row, int col) {
+
+void findpeak(int** data, int row, int col) {
     int i, j ;
-    int count=0 ;
 
     for (i=0; i<row; i++) {
         for (j=0; j<col; j++) {
-            if (i==0) {
-                if (j==0){
-                    if (data[i][j]>=data[i+1][j] && data[i][j]>=data[i][j+1]){
-                        peak.push_back(i+1);
-                        peak.push_back(j+1);
-                        count ++ ;
-                    }
-                }
-                else if (j==col-1) {
-                    if (data[i][j]>=data[i+1][j] && data[i][j]>=data[i][j-1]){
-                        peak.push_back(i+1);
-                        peak.push_back(j+1);
-                        count ++ ;
-                    }
-                }
-                else if(data[i][j]>=data[i+1][j] && data[i][j]>=data[i][j-1] &&
-                        data[i][j]>=data[i][j+1]){
-                    peak.push_back(i+1);
-                    peak.push_back(j+1);
-                    count ++ ;
-                }
+            if (i>0) {
+                if (data[i][j]<data[i-1][j])
+                    continue ;
             }
-            else if (i==row-1){
-                if (j==0){
-                    if (data[i][j]>=data[i-1][j] && data[i][j]>=data[i][j+1]){
-                        peak.push_back(i+1);
-                        peak.push_back(j+1);
-                        count ++ ;
-                    }
-                }
-                else if (j==col-1) {
-                    if (data[i][j]>=data[i-1][j] && data[i][j]>=data[i][j-1]){
-                        peak.push_back(i+1);
-                        peak.push_back(j+1);
-                        count ++ ;
-                    }
-                }
-                else if (data[i][j]>=data[i-1][j] && data[i][j]>=data[i][j-1] &&
-                         data[i][j]>=data[i][j+1]){
-                    peak.push_back(i+1);
-                    peak.push_back(j+1);
-                    count ++ ;
-                }
+            if (i<row-1) {
+                if (data[i][j]<data[i+1][j])
+                    continue ;
             }
-            else if (j==0){
-                if (data[i][j]>=data[i-1][j] && data[i][j]>=data[i+1][j] &&
-                    data[i][j]>=data[i][j+1]){
-                    peak.push_back(i+1);
-                    peak.push_back(j+1);
-                    count ++ ;
-                }
+            if (j>0) {
+                if (data[i][j]<data[i][j-1])
+                    continue ;
             }
-            else if (j==col-1) {
-                if (data[i][j]>=data[i-1][j] && data[i][j]>=data[i+1][j] &&
-                    data[i][j]>=data[i][j-1]){
-                    peak.push_back(i+1);
-                    peak.push_back(j+1);
-                    count ++ ;
-                }
+            if (j<col-1) {
+                if (data[i][j]<data[i][j+1])
+                    continue ;
             }
-            else {
-                if (data[i][j]>=data[i-1][j] && data[i][j]>=data[i+1][j] &&
-                    data[i][j]>=data[i][j-1] && data[i][j]>=data[i][j+1]){
-                    peak.push_back(i+1);
-                    peak.push_back(j+1);
-                    count ++ ;
-                }
-            }
+            peak.push_back(i+1) ;
+            peak.push_back(j+1) ;
         }
-    }
-    return count ;
+    }        
 }
 
 int main( int argc, char*argv[] ) {
+    //lock_t t;
+    //int f;
+    //t = clock();
+
     if (argc != 2) {
         cout << "Input error!\n" ;
         return 1 ;
@@ -125,13 +77,17 @@ int main( int argc, char*argv[] ) {
             data[i][j] = x ;
         }
     }
-    int count = findpeak(data, row, col) ;
+    findpeak(data, row, col) ;
 
-    outfile << count << endl ;
-    for (int i=0; i<count*2; i=i+2) {
+    outfile << peak.size()/2 << endl ;
+    for (int i=0; i<peak.size(); i=i+2) {
         outfile << peak[i] << " " << peak[i+1] << endl ;
     }
 
     delete [] data ;
+
+    //t = clock() - t;
+    //cout << (float)t/CLOCKS_PER_SEC << "seconds" ;
+
     return 0 ;
 }
