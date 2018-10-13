@@ -2,13 +2,11 @@
 #include <fstream>
 #include <vector>
 #include <string>
-//#include <ctime>
 using namespace std ;
 vector <int> peak ;
 int Row ;
 
-void* newmatrix(int h, int w, int size)
-{
+void* newmatrix(int h, int w, int size) {
     int i;
     void **p;
 
@@ -28,7 +26,7 @@ void findpeak(int** data, int row, int col) {
             if (data[row%3][j]<data[row%3][j+1])
                 continue ;
         }
-        if (row != Row) {
+        if (row != Row-1) {
             if (data[row%3][j]<data[(row+1)%3][j])
             continue ;
         }
@@ -49,8 +47,8 @@ int main( int argc, char*argv[] ) {
     }
     string id(argv[1]) ;
 
-    ifstream infile(id + "/matrix.data") ;
-    ofstream outfile(id + "/final.peak") ;
+    ifstream infile("./" + id + "/matrix.data") ;
+    ofstream outfile("./" + id + "/final.peak") ;
     if (!infile) {
         cout << "Can not open file!\n" ;
         return 1 ;
@@ -116,12 +114,12 @@ int main( int argc, char*argv[] ) {
             }
             findpeak(data, i-1, Col) ;
         }
-        findpeak(data, Row, Col) ;
+        findpeak(data, Row-1, Col) ;
     }
 
-    outfile << peak.size()/2 << endl ;
+    outfile << peak.size()/2 << "\n" ;
     for (int i=0; i<peak.size(); i=i+2) {
-        outfile << peak[i] << " " << peak[i+1] << endl ;
+        outfile << peak[i] << " " << peak[i+1] << "\n" ;
     }
 
     delete [] data ;
