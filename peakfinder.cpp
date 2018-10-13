@@ -5,6 +5,7 @@
 //#include <ctime>
 using namespace std ;
 vector <int> peak ;
+int Row ;
 
 void* newmatrix(int h, int w, int size)
 {
@@ -26,20 +27,21 @@ void findpeak(int** data, int row, int col) {
         if (j<col-1) { 
             if (data[row%3][j]<data[row%3][j+1])
                 continue ;
-        }      
-        if (data[row%3][j]<data[(row+1)%3][j])
-            continue ;         
-        if (data[row%3][j]<data[(row+2)%3][j])
+        }
+        if (row != Row) {
+            if (data[row%3][j]<data[(row+1)%3][j])
             continue ;
+        }
+        if (row != 0) {
+            if (data[row%3][j]<data[(row+2)%3][j])
+            continue ;
+        }         
         peak.push_back(row+1) ;
-        peak.push_back(j+1) ;   
+        peak.push_back(j+1) ;
     }
 }
 
 int main( int argc, char*argv[] ) {
-    //clock_t t;
-    //int f;
-    //t = clock();
 
     if (argc != 2) {
         cout << "Input error!\n" ;
@@ -54,23 +56,23 @@ int main( int argc, char*argv[] ) {
         return 1 ;
     }
 
-    int row, col, x ;
-    infile >> row ;
-    infile >> col ;
+    int Col, x ;
+    infile >> Row ;
+    infile >> Col ;
 
-    int **data = (int**) newmatrix(3, col, sizeof(int)) ;
-    for (int j=0; j<col; j++) {
+    int **data = (int**) newmatrix(3, Col, sizeof(int)) ;
+    for (int j=0; j<Col; j++) {
         infile >> x ;
         data[0][j] = x ;
     }  
 
-    if (row == 1) {
-        for (int j=0; j<col; j++) {
+    if (Row == 1) {
+        for (int j=0; j<Col; j++) {
             if (j>0) {                         //左
                 if (data[0][j]<data[0][j-1])
                     continue ;
             }
-            if (j<col-1) {                     //右
+            if (j<Col-1) {                     //右
                 if (data[0][j]<data[0][j+1])
                     continue ;
             }
@@ -78,13 +80,13 @@ int main( int argc, char*argv[] ) {
             peak.push_back(j+1) ;
         }
     }
-    else if (row == 2) {
-        for (int j=0; j<col; j++) {
+    else if (Row == 2) {
+        for (int j=0; j<Col; j++) {
             infile >> x ;
             data[1][j] = x ;
         }
         for (int i=0; i<2; i++) {
-            for (int j=0; j<col; j++) {
+            for (int j=0; j<Col; j++) {
                 if (i>0) {                         //上
                     if (data[i][j]<data[i-1][j])
                         continue ;
@@ -93,11 +95,11 @@ int main( int argc, char*argv[] ) {
                     if (data[i][j]<data[i][j-1])
                         continue ;
                 }
-                if (i<row-1) {                     //下
+                if (i<Row-1) {                     //下
                     if (data[i][j]<data[i+1][j])
                         continue ;
                 }
-                if (j<col-1) {                     //右
+                if (j<Col-1) {                     //右
                     if (data[i][j]<data[i][j+1])
                         continue ;
                 }
@@ -107,14 +109,14 @@ int main( int argc, char*argv[] ) {
         }        
     }
     else {
-        for(int i=1; i<row; i++){
-            for(int j=0; j<col; j++){
+        for(int i=1; i<Row; i++){
+            for(int j=0; j<Col; j++){
                 infile >> x ;
                 data[i%3][j] = x ;
             }
-            findpeak(data, i-1, col) ;
+            findpeak(data, i-1, Col) ;
         }
-        findpeak(data, row, col) ;
+        findpeak(data, Row, Col) ;
     }
 
     outfile << peak.size()/2 << endl ;
@@ -123,9 +125,5 @@ int main( int argc, char*argv[] ) {
     }
 
     delete [] data ;
-
-    //t = clock() - t;
-    //cout << (float)t/CLOCKS_PER_SEC << "seconds" ;
-
     return 0 ;
 }
