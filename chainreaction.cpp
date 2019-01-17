@@ -180,7 +180,7 @@ class Student{
                         tf = 1 ;
                 }
             }
-            /*if (tf == 0) {
+            if (tf == 0) {
                 if (i!=0 && color[i-1][j] == enemy && diff == Max[i-1][j]-Record[i-1][j]) {
                     if((color[i-2][j] == inputColor && Record[i-2][j] == Max[i-2][j]-1) ||
                        (color[i-1][j+1] == inputColor && Record[i-1][j+1] == Max[i-1][j+1]-1) ||
@@ -209,8 +209,32 @@ class Student{
                         tf = 1 ;
                     }
                 }
-            }*/
-            
+            }
+            if (i>0 && j>0) {
+                if (color[i-1][j-1] == enemy && Max[i-1][j-1] == 1 && diff == 1) {
+                    if ( Max[i-1][j]-Record[i-1][j] == 1 || Max[i][j-1]-Record[i][j-1] == 1)
+                        tf = tf ;
+                }
+            }
+            else if (i<4 && j>0) {
+                if (color[i+1][j-1] == enemy && Max[i+1][j-1] == 1 && diff == 1) {
+                    if ( Max[i+1][j]-Record[i+1][j] == 1 || Max[i][j-1]-Record[i][j-1] == 1)
+                        tf = tf ;
+                }
+            }
+            else if (i>0 && j<5) {
+                if (color[i-1][j+1] == enemy && Max[i-1][j+1] == 1 && diff == 1) {
+                    if ( Max[i-1][j]-Record[i-1][j] == 1 || Max[i][j+1]-Record[i][j+1] == 1)
+                        tf = tf ;
+                }
+            }
+            else if (i<4 && j<5) {
+                if (color[i+1][j+1] == enemy && Max[i+1][j+1] == 1 && diff == 1) {
+                    if ( Max[i+1][j]-Record[i+1][j] == 1 || Max[i][j+1]-Record[i][j+1] == 1)
+                        tf = tf ;
+                }
+            }
+            else tf = 1 ;
             return tf ;
         }
         void makeMove(int Record[5][6], int Max[5][6], Color color[5][6], Color inputColor){
